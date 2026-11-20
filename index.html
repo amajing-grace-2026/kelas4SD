@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arsitek Alat Peraga SD Kelas 4 (v3.0)</title>
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-hover: #115e59;
+      --primary-light: #f0fdfa;
+      --accent: #d97706;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #cbd5e1;
+      --danger: #dc2626;
+      --success: #15803d;
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: #0f766e;
+      color: #ffffff;
+      padding: 1rem 1.5rem;
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-inner h1 { font-size: 1.2rem; font-weight: 700; }
+    .header-inner p { font-size: 0.85rem; color: #ccfbf1; }
+
+    /* Bar Pengaturan API */
+    .api-panel {
+      max-width: 1200px;
+      margin: 1rem auto 0;
+      padding: 0 1.25rem;
+    }
+
+    .api-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1.1rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .api-card label {
+      font-size: 0.84rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .api-card input {
+      flex: 1;
+      min-width: 220px;
+      padding: 0.5rem 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.85rem;
+    }
+
+    .api-card select {
+      padding: 0.5rem 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.84rem;
+      background: #ffffff;
+      max-width: 240px;
+    }
+
+    .status-line {
+      width: 100%;
+      font-size: 0.82rem;
+      padding-top: 0.35rem;
+      color: var(--muted);
+    }
+
+    .status-ok { color: var(--success); font-weight: 600; }
+    .status-err { color: var(--danger); font-weight: 600; }
+
+    /* Layout Utama */
+    main {
+      max-width: 1200px;
+      margin: 1rem auto 2rem;
+      padding: 0 1.25rem;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.9rem;
+      padding-bottom: 0.55rem;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .form-group { margin-bottom: 0.85rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.83rem;
+      font-weight: 600;
+      margin-bottom: 0.28rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.55rem 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      font-size: 0.88rem;
+      font-family: inherit;
+    }
+
+    .chip-wrap { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.35rem; }
+    .chip {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      font-size: 0.75rem;
+      padding: 0.22rem 0.55rem;
+      border-radius: 99px;
+      cursor: pointer;
+    }
+    .chip:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+
+    .btn {
+      padding: 0.6rem 0.9rem;
+      border-radius: 7px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+
+    .btn-full { width: 100%; margin-top: 0.4rem; }
+    .btn-primary { background: var(--primary); color: #ffffff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-primary:disabled { background: #94a3b8; cursor: not-allowed; }
+    .btn-accent { background: var(--accent); color: #ffffff; }
+    .btn-accent:hover { background: #b45309; }
+    .btn-secondary { background: var(--primary-light); color: var(--primary); border: 1px solid #99f6e4; }
+    .btn-sm { padding: 0.38rem 0.7rem; font-size: 0.8rem; }
+
+    /* Output */
+    .output-box { min-height: 420px; font-size: 0.93rem; }
+    .placeholder { text-align: center; padding: 3.5rem 1rem; color: var(--muted); }
+    .error-box {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+    }
+
+    .markdown-body h1, .markdown-body h2, .markdown-body h3 { color: #0f172a; margin-top: 1.1rem; margin-bottom: 0.4rem; }
+    .markdown-body h2 { font-size: 1.08rem; color: var(--primary); }
+    .markdown-body p { margin-bottom: 0.65rem; }
+    .markdown-body ul, .markdown-body ol { margin-left: 1.3rem; margin-bottom: 0.75rem; }
+    .markdown-body li { margin-bottom: 0.3rem; }
+    .markdown-body table { width: 100%; border-collapse: collapse; margin: 0.85rem 0; font-size: 0.86rem; }
+    .markdown-body th, .markdown-body td { border: 1px solid #94a3b8; padding: 0.48rem 0.6rem; text-align: left; }
+    .markdown-body th { background: var(--primary-light); }
+
+    @media print {
+      header, .api-panel, .sidebar-panel, .no-print { display: none !important; }
+      main { display: block; margin: 0; padding: 0; }
+      .card { border: none; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div>
+        <h1>Arsitek Alat Peraga Edukatif (APE) — SD Kelas 4 (v3.0)</h1>
+        <p>Generator Blueprint & Kartu Cetak Kurikulum Merdeka Fase B</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Panel API Key & Deteksi Model Otomatis -->
+  <div class="api-panel">
+    <div class="api-card">
+      <label for="apiKeyInput">1. API Key AI Studio:</label>
+      <input type="text" id="apiKeyInput" placeholder="Tempel API Key (AIzaSy...) di sini" />
+      <button type="button" id="btnTestKey" class="btn btn-accent btn-sm">Tes Key & Muat Model</button>
+      <select id="modelSelect" title="Daftar Model Aktif">
+        <option value="">-- Klik 'Tes Key & Muat Model' --</option>
+      </select>
+      <div id="apiStatus" class="status-line">
+        Status: Tempel API Key dari Google AI Studio lalu klik <b>Tes Key & Muat Model</b>.
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- Panel Input -->
+    <section class="card sidebar-panel">
+      <div class="card-title">2. Parameter Alat Peraga</div>
+
+      <div class="form-group">
+        <label for="mapel">Mata Pelajaran</label>
+        <select id="mapel">
+          <option value="IPAS (Ilmu Pengetahuan Alam dan Sosial)">IPAS (IPA & IPS)</option>
+          <option value="Matematika">Matematika</option>
+          <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+          <option value="Pendidikan Pancasila">Pendidikan Pancasila</option>
+          <option value="Seni Budaya / Prakarya">Seni Budaya / Prakarya</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="topik">Topik / Materi Pelajaran *</label>
+        <input type="text" id="topik" placeholder="Ketik topik atau klik contoh di bawah..." />
+        <div class="chip-wrap" id="topicPresets"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="jenisApe">Jenis Alat Peraga</label>
+        <select id="jenisApe">
+          <option value="2 Opsi (Opsi A: Cetak/Printable 2D dan Opsi B: Rakit Fisik/DIY 3D)">2 Opsi (Cetak 2D & Rakit 3D)</option>
+          <option value="Fokus Cetak / Printable 2D (Kartu permainan & papan bongkar-pasang A4)">Fokus Cetak / Printable 2D</option>
+          <option value="Fokus Rakit Fisik / DIY 3D (Barang bekas, kardus, botol, sedotan)">Fokus Rakit Fisik / DIY 3D</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="waktuBuat">Waktu Buat</label>
+          <select id="waktuBuat">
+            <option value="Maksimal 15 menit">15 Menit (Kilat)</option>
+            <option value="Maksimal 30 menit" selected>30 Menit (Standar)</option>
+            <option value="45-60 menit">60 Menit (Detail)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="anggaran">Anggaran</label>
+          <select id="anggaran">
+            <option value="Rp 0 (100% barang bekas)">Rp 0 (Barang Bekas)</option>
+            <option value="Di bawah Rp 15.000" selected>< Rp 15.000</option>
+            <option value="Fleksibel">Fleksibel</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="kelompok">Kondisi Kelas</label>
+        <input type="text" id="kelompok" value="28 siswa dibagi 6 kelompok" />
+      </div>
+
+      <div class="form-group">
+        <label for="catatan">Catatan Tambahan (Opsional)</label>
+        <textarea id="catatan" rows="2" placeholder="Contoh: Printer hitam-putih, bahan kardus bekas."></textarea>
+      </div>
+
+      <button type="button" id="btnGenerate" class="btn btn-primary btn-full">
+        Buat Blueprint Alat Peraga
+      </button>
+      <button type="button" id="btnCopyPrompt" class="btn btn-secondary btn-full">
+        Salin Prompt (Jika Tanpa API Key)
+      </button>
+    </section>
+
+    <!-- Panel Output -->
+    <section class="card">
+      <div class="card-title">
+        <span>Hasil Blueprint Alat Peraga</span>
+        <div class="no-print" id="toolbar" style="display: none; gap: 0.4rem;">
+          <button type="button" id="btnCopyResult" class="btn btn-secondary btn-sm">Salin Teks</button>
+          <button type="button" id="btnPrint" class="btn btn-primary btn-sm">Cetak / Simpan PDF</button>
+        </div>
+      </div>
+
+      <div id="outputBox" class="output-box markdown-body">
+        <div class="placeholder">
+          Isi <b>API Key</b> di atas lalu klik <b>Tes Key & Muat Model</b>. Setelah model muncul, pilih topik dan klik <b>Buat Blueprint Alat Peraga</b>.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const SYSTEM_PROMPT = [
+      "Kamu adalah Arsitek Alat Peraga Edukatif (APE) SD Kelas 4 (Fase B Kurikulum Merdeka).",
+      "Rancang alat peraga yang murah, aman untuk anak usia 9-10 tahun, interaktif dalam kelompok kecil, dan mudah dibuat guru.",
+      "Gunakan struktur berikut dalam Bahasa Indonesia yang lugas tanpa basa-basi pembuka/penutup:",
+      "1. **Nama Alat Peraga & Target Materi**",
+      "2. **Alat & Bahan** (lengkap dengan ukuran, jumlah, dan perkiraan biaya)",
+      "3. **Langkah Pembuatan** (bernomor urut, tandai bagian tajam/panas yang wajib dikerjakan guru)",
+      "4. **Skenario Penggunaan di Kelas (15-20 Menit)** (demonstrasi guru, aktivitas kelompok, dan 3 pertanyaan pemantik)",
+      "5. **Konten Cetak / Kartu Pendukung** (tulis lengkap dalam bentuk tabel Markdown agar guru tinggal mencetak)"
+    ].join("\n");
+
+    const PRESETS = {
+      "IPAS (Ilmu Pengetahuan Alam dan Sosial)": ["Siklus Air & Perubahan Wujud", "Gaya Gesek & Gravitasi", "Bagian Tumbuhan & Fotosintesis", "Rantai Makanan"],
+      "Matematika": ["Pecahan Senilai", "Luas & Keliling Bangun Datar", "Jenis-Jenis Sudut", "Pola Bilangan"],
+      "Bahasa Indonesia": ["Kalimat Transitif & Intransitif", "Ide Pokok Paragraf", "Teks Petunjuk", "Sinonim & Antonim"],
+      "Pendidikan Pancasila": ["Makna Sila Pancasila", "Hak & Kewajiban", "Musyawarah", "Keberagaman Budaya"],
+      "Seni Budaya / Prakarya": ["Warna Primer & Sekunder", "Kerajinan Daur Ulang", "Ragam Hias Nusantara"]
+    };
+
+    let lastMarkdown = "";
+
+    // Penyimpanan aman
+    function getStore(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function setStore(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+    function setStatus(msg, type) {
+      const el = document.getElementById("apiStatus");
+      el.textContent = msg;
+      el.className = "status-line " + (type === "ok" ? "status-ok" : type === "err" ? "status-err" : "");
+    }
+
+    function updatePresets() {
+      const mapel = document.getElementById("mapel").value;
+      const box = document.getElementById("topicPresets");
+      box.innerHTML = "";
+      (PRESETS[mapel] || []).forEach(function(item) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "chip";
+        b.textContent = item;
+        b.onclick = function() { document.getElementById("topik").value = item; };
+        box.appendChild(b);
+      });
+    }
+
+    // Mengambil daftar model yang benar-benar aktif untuk API Key pengguna
+    async function loadAvailableModels(silent) {
+      const key = document.getElementById("apiKeyInput").value.trim();
+      if (!key) {
+        if (!silent) setStatus("Masukkan API Key terlebih dahulu.", "err");
+        return null;
+      }
+      setStore("ape_v3_key", key);
+      setStatus("Menghubungi server Google AI Studio untuk memeriksa API Key...", "");
+
+      try {
+        const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models?key=" + encodeURIComponent(key));
+        const data = await res.json();
+
+        if (!res.ok) {
+          const rawMsg = (data.error && data.error.message) ? data.error.message : ("HTTP " + res.status);
+          throw new Error(rawMsg);
+        }
+
+        const models = (data.models || []).filter(function(m) {
+          return m.supportedGenerationMethods && m.supportedGenerationMethods.indexOf("generateContent") !== -1;
+        });
+
+        if (models.length === 0) {
+          throw new Error("API Key valid, tetapi tidak ada model generateContent yang tersedia.");
+        }
+
+        // Urutkan agar model flash / gemini terbaru berada di atas
+        models.sort(function(a, b) {
+          const aFlash = a.name.indexOf("flash") !== -1 ? 0 : 1;
+          const bFlash = b.name.indexOf("flash") !== -1 ? 0 : 1;
+          return aFlash - bFlash;
+        });
+
+        const select = document.getElementById("modelSelect");
+        select.innerHTML = "";
+        models.forEach(function(m) {
+          const cleanName = m.name.replace("models/", "");
+          const opt = document.createElement("option");
+          opt.value = cleanName;
+          opt.textContent = cleanName;
+          select.appendChild(opt);
+        });
+
+        setStatus("Terhubung! Ditemukan " + models.length + " model aktif. Siap membuat blueprint.", "ok");
+        return select.value;
+      } catch (err) {
+        let penjelasan = err.message;
+        if (penjelasan.indexOf("Failed to fetch") !== -1) {
+          penjelasan = "Gagal terhubung ke internet atau browser memblokir akses. Pastikan file dibuka langsung di Google Chrome/Edge.";
+        } else if (penjelasan.indexOf("API_KEY_INVALID") !== -1 || penjelasan.indexOf("API key not valid") !== -1) {
+          penjelasan = "API Key tidak valid. Periksa kembali salinan kunci dari aistudio.google.com.";
+        }
+        setStatus("Error: " + penjelasan, "err");
+        return null;
+      }
+    }
+
+    function buildPromptText() {
+      const mapel = document.getElementById("mapel").value;
+      const topik = document.getElementById("topik").value.trim();
+      const jenis = document.getElementById("jenisApe").value;
+      const waktu = document.getElementById("waktuBuat").value;
+      const biaya = document.getElementById("anggaran").value;
+      const kelas = document.getElementById("kelompok").value.trim();
+      const catatan = document.getElementById("catatan").value.trim();
+
+      return [
+        "Buatkan blueprint alat peraga SD Kelas 4 dengan detail:",
+        "- Mata Pelajaran: " + mapel,
+        "- Topik: " + topik,
+        "- Jenis Alat Peraga: " + jenis,
+        "- Waktu Pembuatan: " + waktu,
+        "- Anggaran: " + biaya,
+        "- Kondisi Kelas: " + kelas,
+        catatan ? ("- Catatan: " + catatan) : ""
+      ].filter(Boolean).join("\n");
+    }
+
+    async function generateBlueprint() {
+      const key = document.getElementById("apiKeyInput").value.trim();
+      const topik = document.getElementById("topik").value.trim();
+      const outputBox = document.getElementById("outputBox");
+      const btn = document.getElementById("btnGenerate");
+
+      if (!key) {
+        setStatus("Tempel API Key dari Google AI Studio terlebih dahulu.", "err");
+        document.getElementById("apiKeyInput").focus();
+        return;
+      }
+      if (!topik) {
+        setStatus("Isi kolom Topik / Materi Pelajaran terlebih dahulu.", "err");
+        document.getElementById("topik").focus();
+        return;
+      }
+
+      let modelName = document.getElementById("modelSelect").value;
+      if (!modelName) {
+        modelName = await loadAvailableModels(false);
+        if (!modelName) return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Sedang Menyusun Blueprint...";
+      document.getElementById("toolbar").style.display = "none";
+      outputBox.innerHTML = '<div class="placeholder">Menghubungi model <b>' + escapeHtml(modelName) + '</b> untuk menyusun alat peraga...</div>';
+
+      try {
+        const res = await fetch(
+          "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(modelName) + ":generateContent?key=" + encodeURIComponent(key),
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+              contents: [{ role: "user", parts: [{ text: buildPromptText() }] }],
+              generationConfig: { temperature: 0.6 }
+            })
+          }
+        );
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error((data.error && data.error.message) ? data.error.message : ("HTTP " + res.status));
+        }
+
+        const text = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]
+          ? data.candidates[0].content.parts[0].text
+          : "";
+
+        if (!text) throw new Error("Server mengembalikan jawaban kosong.");
+
+        lastMarkdown = text;
+        outputBox.innerHTML = renderMarkdown(text);
+        document.getElementById("toolbar").style.display = "flex";
+        setStatus("Blueprint berhasil dibuat menggunakan model " + modelName + ".", "ok");
+      } catch (err) {
+        outputBox.innerHTML = '<div class="error-box"><b>Gagal Membuat Blueprint:</b><br>' + escapeHtml(err.message) + '</div>';
+        setStatus("Gagal: " + err.message, "err");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Buat Blueprint Alat Peraga";
+      }
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">").replace(/"/g, """);
+    }
+
+    function formatInline(t) {
+      return escapeHtml(t).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\*(.+?)\*/g, "<em>$1</em>");
+    }
+
+    function renderMarkdown(md) {
+      const lines = md.split("\n");
+      let html = "", inUl = false, inOl = false, inTable = false;
+      const closeLists = function() {
+        if (inUl) { html += "</ul>"; inUl = false; }
+        if (inOl) { html += "</ol>"; inOl = false; }
+      };
+      const closeTable = function() {
+        if (inTable) { html += "</tbody></table>"; inTable = false; }
+      };
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) { closeLists(); closeTable(); continue; }
+        if (line.startsWith("### ")) { closeLists(); closeTable(); html += "<h3>" + formatInline(line.slice(4)) + "</h3>"; continue; }
+        if (line.startsWith("## ")) { closeLists(); closeTable(); html += "<h2>" + formatInline(line.slice(3)) + "</h2>"; continue; }
+        if (line.startsWith("# ")) { closeLists(); closeTable(); html += "<h1>" + formatInline(line.slice(2)) + "</h1>"; continue; }
+
+        if (line.startsWith("|") && line.endsWith("|")) {
+          closeLists();
+          const cells = line.slice(1, -1).split("|").map(function(c) { return c.trim(); });
+          if (cells.every(function(c) { return /^[-:]+$/.test(c); })) continue;
+          if (!inTable) {
+            inTable = true;
+            html += "<table><thead><tr>" + cells.map(function(c) { return "<th>" + formatInline(c) + "</th>"; }).join("") + "</tr></thead><tbody>";
+          } else {
+            html += "<tr>" + cells.map(function(c) { return "<td>" + formatInline(c) + "</td>"; }).join("") + "</tr>";
+          }
+          continue;
+        } else {
+          closeTable();
+        }
+
+        if (/^[-*]\s+/.test(line)) {
+          if (inOl) { html += "</ol>"; inOl = false; }
+          if (!inUl) { html += "<ul>"; inUl = true; }
+          html += "<li>" + formatInline(line.replace(/^[-*]\s+/, "")) + "</li>";
+          continue;
+        }
+        if (/^\d+\.\s+/.test(line)) {
+          if (inUl) { html += "</ul>"; inUl = false; }
+          if (!inOl) { html += "<ol>"; inOl = true; }
+          html += "<li>" + formatInline(line.replace(/^\d+\.\s+/, "")) + "</li>";
+          continue;
+        }
+        closeLists();
+        html += "<p>" + formatInline(line) + "</p>";
+      }
+      closeLists();
+      closeTable();
+      return html;
+    }
+
+    // Inisialisasi Event Listener
+    document.getElementById("mapel").addEventListener("change", updatePresets);
+    document.getElementById("btnTestKey").addEventListener("click", function() { loadAvailableModels(false); });
+    document.getElementById("btnGenerate").addEventListener("click", generateBlueprint);
+    document.getElementById("btnPrint").addEventListener("click", function() { window.print(); });
+    document.getElementById("btnCopyResult").addEventListener("click", function() {
+      navigator.clipboard.writeText(lastMarkdown);
+      setStatus("Hasil blueprint disalin ke clipboard.", "ok");
+    });
+    document.getElementById("btnCopyPrompt").addEventListener("click", function() {
+      const topik = document.getElementById("topik").value.trim();
+      if (!topik) { setStatus("Isi Topik terlebih dahulu.", "err"); return; }
+      navigator.clipboard.writeText(SYSTEM_PROMPT + "\n\n---\n\n" + buildPromptText());
+      setStatus("Prompt lengkap disalin! Bisa langsung ditempel ke Gemini atau ChatGPT.", "ok");
+    });
+
+    updatePresets();
+    const savedKey = getStore("ape_v3_key");
+    if (savedKey) {
+      document.getElementById("apiKeyInput").value = savedKey;
+      loadAvailableModels(true);
+    }
+  </script>
+</body>
+</html>
